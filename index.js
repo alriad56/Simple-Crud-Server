@@ -2,7 +2,7 @@ const dns = require('dns');
 
 dns.setServers(['8.8.8.8', '1.1.1.1']);
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors')
 const app = express()
 const port = process.env.PORT || 3000
@@ -60,8 +60,13 @@ app.get('/',(req,res) =>{
           res.send(result);
       })
 
-      app.delete('/users/:id',(req,res)=>{
-        console.log('delete a user from database')
+      app.delete('/users/:id',async (req,res)=>{
+        
+        const id = req.params.id
+       const query = {_id: new ObjectId(id)}
+       const result = await usersCollection.deleteOne(query)
+       res.send(result)
+      
       })
      }
      finally{
